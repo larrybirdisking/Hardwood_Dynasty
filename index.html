@@ -1,0 +1,680 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hardwood Dynasty</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg:#090b0f;
+  --panel:#11141a;
+  --panel2:#171b23;
+  --line:#272c36;
+  --text:#f1f3f7;
+  --muted:#8992a2;
+  --accent:#e9f36a;
+}
+* { box-sizing:border-box }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+}
+button { font:inherit }
+button:focus-visible { outline:2px solid var(--accent); outline-offset:3px }
+header {
+  padding:22px max(18px,calc((100% - 1100px)/2));
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+}
+.brand { display:flex; align-items:center; gap:11px; font-weight:800; letter-spacing:1px }
+.brand-icon {
+  display:grid; place-items:center; width:34px; height:34px;
+  border-radius:10px; background:var(--accent); color:#10120a;
+  font-weight:900; font-size:18px;
+}
+.pill {
+  color:var(--muted); border:1px solid var(--line);
+  border-radius:30px; padding:7px 11px; font-size:11px;
+}
+main { max-width:1100px; padding:28px 16px 65px; margin:auto }
+.eyebrow {
+  color:var(--accent); font-size:10px; font-weight:800;
+  letter-spacing:2px; text-transform:uppercase;
+}
+h1,h2,h3,p { margin-top:0 }
+h1,h2,.display { font-family:'Space Grotesk',sans-serif }
+h1 { font-size:clamp(32px,6vw,57px); letter-spacing:-2.5px; line-height:1.04; margin:12px 0 }
+h1 span { color:var(--accent) }
+.intro { color:var(--muted); line-height:1.7; max-width:520px; margin-bottom:25px }
+.layout { display:grid; grid-template-columns:1fr 1fr; gap:15px }
+.panel {
+  min-width:0; background:var(--panel);
+  border:1px solid var(--line); border-radius:16px; padding:19px;
+  animation:appear .45s ease both;
+}
+.panel.wide { grid-column:1/-1 }
+.panel-head { display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:16px }
+.panel-head h2 { font-size:16px; margin:0; letter-spacing:-.3px }
+.step { color:var(--muted); font-size:10px; letter-spacing:1px }
+button {
+  cursor:pointer; transition:transform .18s, background .18s, border-color .18s, opacity .18s;
+}
+button:not(:disabled):active { transform:scale(.97) }
+button:disabled { opacity:.35; cursor:not-allowed }
+.primary {
+  border:0; background:var(--accent); color:#15170d;
+  border-radius:9px; padding:12px 15px; font-weight:800;
+}
+.primary:not(:disabled):hover { background:#f5ffa0; transform:translateY(-1px) }
+.secondary {
+  color:var(--text); background:var(--panel2);
+  border:1px solid var(--line); border-radius:9px;
+  padding:11px 14px; font-weight:700;
+}
+.secondary:not(:disabled):hover { border-color:#606979 }
+.actions { display:flex; flex-wrap:wrap; gap:9px }
+.team-year { display:grid; grid-template-columns:1fr 1fr; gap:10px }
+.tile {
+  padding:16px; border:1px solid var(--line);
+  background:#0b0e13; border-radius:11px; min-width:0;
+}
+.tile-label { color:var(--muted); font-size:10px; letter-spacing:1.5px }
+.tile-value {
+  font-family:'Space Grotesk',sans-serif; font-size:clamp(21px,3vw,30px);
+  font-weight:700; margin:10px 0 5px; overflow-wrap:anywhere;
+}
+.tile-sub { color:var(--muted); font-size:11px }
+.progress-row { display:flex; justify-content:space-between; margin:18px 0 8px; font-size:12px }
+.progress-row span:last-child { color:var(--muted) }
+.progress { height:4px; background:#292e38; border-radius:9px; overflow:hidden; margin-bottom:16px }
+.progress-fill { height:100%; background:var(--accent); transition:width .4s ease }
+.status { font-size:12px; color:var(--muted); margin-top:13px; line-height:1.6 }
+.status.good { color:var(--accent) }
+.candidates { display:grid; grid-template-columns:1fr 1fr; gap:9px }
+.candidate {
+  text-align:left; color:var(--text); background:#0c0f14;
+  border:1px solid var(--line); border-radius:11px; padding:12px;
+  min-width:0; width:100%;
+  animation:appear .3s ease both;
+}
+.candidate:not(:disabled):hover { border-color:#69717f; background:#171b22; transform:translateY(-2px) }
+.candidate.chosen { border-color:var(--accent); background:#1a1e16 }
+.candidate:disabled { opacity:.32; cursor:not-allowed }
+.candidate-top { display:flex; justify-content:space-between; align-items:center; gap:8px }
+.player-name { font-size:13px; font-weight:800; overflow-wrap:anywhere; line-height:1.4 }
+.player-info { color:var(--muted); font-size:10px; margin-top:5px; line-height:1.5 }
+.rating {
+  min-width:36px; padding:6px 5px; border-radius:6px;
+  font-size:15px; text-align:center; font-weight:900; flex-shrink:0;
+}
+.ovr99 { color:white; background:#df2639 }
+.ovr90 { color:#17130b; background:#f1c743 }
+.ovr80 { color:white; background:#884bd2 }
+.ovr70 { color:white; background:#2878db }
+.ovr60 { color:#08210f; background:#56d47a }
+.ovr0 { color:white; background:#555c68 }
+.position-choice { margin:0 0 15px;padding:13px;border:1px solid rgba(233,243,106,.28);border-radius:10px;background:rgba(233,243,106,.045) }
+.position-choice-title {font-size:10px;letter-spacing:1px;color:var(--muted);margin-bottom:9px}
+.position-choice-buttons {display:flex;flex-wrap:wrap;gap:7px}
+.position-picker { display:flex; gap:5px; flex-wrap:wrap; margin-top:11px }
+.pos-btn {
+  border:1px solid #414957; background:#202530; color:white;
+  padding:7px 10px; border-radius:6px; font-size:10px; font-weight:800;
+}
+.pos-btn:hover { background:var(--accent); color:#12140b; border-color:var(--accent) }
+.pos-hint { color:var(--muted); font-size:10px; margin-top:8px }
+.squad-head { display:flex; justify-content:space-between; align-items:center; margin:22px 0 11px }
+.squad-head h3 { margin:0; font-size:12px; letter-spacing:1px }
+.squad-head span { color:var(--muted); font-size:10px }
+.slots { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px }
+.slot {
+  min-width:0; padding:11px 8px; border:1px dashed #363c48;
+  border-radius:10px; min-height:106px; background:#0c0f14;
+  transition:border-color .2s,background .2s;
+}
+.slot.filled { border-style:solid; border-color:#343b44; animation:slotIn .3s ease both }
+.slot-pos { color:var(--accent); font-size:10px; font-weight:900; letter-spacing:1px }
+.slot-name { font-size:11px; font-weight:800; line-height:1.45; margin:10px 0 6px; overflow-wrap:anywhere }
+.slot-sub { color:var(--muted); font-size:9px; line-height:1.5 }
+.slot-rating { font-size:12px; font-weight:900; margin-top:8px }
+.bench-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px }
+.summary { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:15px }
+.summary-box { background:#0b0e13; border:1px solid var(--line); border-radius:10px; padding:13px }
+.summary-label { color:var(--muted); font-size:9px; letter-spacing:1px }
+.summary-value { font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:700; margin-top:7px; overflow-wrap:anywhere }
+.legend { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px }
+.legend span { font-size:9px; font-weight:900; padding:6px 8px; border-radius:5px }
+.empty-message {
+  padding:23px 12px; text-align:center; border:1px dashed var(--line);
+  border-radius:10px; color:var(--muted); font-size:12px; line-height:1.7;
+}
+footer { padding-top:20px; text-align:center; color:#626b79; font-size:10px; letter-spacing:1.5px }
+@keyframes appear { from { opacity:0; transform:translateY(7px) } to { opacity:1; transform:translateY(0) } }
+@keyframes slotIn { from { opacity:0; transform:scale(.96) } to { opacity:1; transform:scale(1) } }
+@media(max-width:700px) {
+  .layout { grid-template-columns:1fr }
+  .panel.wide { grid-column:auto }
+}
+@media(max-width:470px) {
+  main { padding:23px 11px 45px }
+  .panel { padding:13px }
+  .candidates { grid-template-columns:1fr }
+  .slots,.bench-grid { grid-template-columns:repeat(2,minmax(0,1fr)) }
+  .summary { grid-template-columns:1fr 1fr }
+  .summary-box:last-child { grid-column:1/-1 }
+  header { padding:17px 13px }
+  .pill { font-size:9px }
+}
+
+/* court-side glass redesign */
+body {
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(205,230,74,.10),transparent 34%),
+    radial-gradient(ellipse at 92% 28%,rgba(43,102,179,.12),transparent 34%),
+    linear-gradient(145deg,#07090d,#0b1017 58%,#090b10);
+  background-attachment:fixed;
+}
+body::before {
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;z-index:-1;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+header {background:rgba(8,10,14,.72);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);position:sticky;top:0;z-index:20}
+.brand-icon {border-radius:8px;box-shadow:0 0 24px #e9f36a28;transform:skew(-5deg)}
+.panel {
+  position:relative;overflow:hidden;
+  background:linear-gradient(145deg,rgba(25,30,39,.82),rgba(11,14,20,.78));
+  border:1px solid rgba(209,222,240,.12);
+  box-shadow:0 16px 45px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.045);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.panel::before {content:"";position:absolute;left:0;top:0;width:64px;height:2px;background:var(--accent);opacity:.85}
+.panel-head h2::before {content:"";display:inline-block;width:5px;height:15px;background:var(--accent);margin-right:9px;transform:skew(-12deg);vertical-align:-2px}
+.tile,.summary-box,.candidate,.slot {
+  background:linear-gradient(145deg,rgba(7,10,15,.88),rgba(18,23,31,.78));
+  border-color:rgba(199,213,234,.13);
+}
+.tile {position:relative;overflow:hidden}
+.tile::after {content:"";position:absolute;right:-25px;bottom:-44px;width:90px;height:90px;border:1px solid rgba(233,243,106,.13);border-radius:50%;box-shadow:0 0 0 12px rgba(233,243,106,.025),0 0 0 24px rgba(233,243,106,.02)}
+.primary {box-shadow:0 6px 22px rgba(233,243,106,.12);letter-spacing:.35px}
+.secondary {background:rgba(255,255,255,.035);backdrop-filter:blur(8px)}
+.candidate {position:relative;overflow:visible;transition:transform .22s,border-color .22s,background .22s,box-shadow .22s}
+.candidate:not(:disabled):hover {border-color:rgba(233,243,106,.62);box-shadow:0 12px 30px rgba(0,0,0,.26),0 0 0 1px rgba(233,243,106,.08);z-index:5}
+.candidate.chosen {border-color:var(--accent);box-shadow:0 0 0 1px #e9f36a35,0 12px 30px #0005}
+.candidate-top {gap:12px}
+.player-name {font-size:14px}
+.rating {box-shadow:inset 0 1px rgba(255,255,255,.18)}
+.hidden {display:none!important}
+.roll-value {animation:rollFlash .45s ease}
+.rolling {filter:blur(.25px);color:var(--accent)!important;text-shadow:0 0 24px #e9f36a55;animation:rollPulse .12s linear infinite alternate}
+.court-divider {height:1px;background:linear-gradient(90deg,transparent,rgba(233,243,106,.35),transparent);margin:17px 0}
+.player-pop {
+  display:none;position:absolute;left:calc(100% + 10px);top:0;width:290px;max-width:min(290px,80vw);
+  z-index:30;padding:14px;border:1px solid rgba(220,232,246,.2);border-radius:13px;
+  background:rgba(9,12,17,.96);box-shadow:0 18px 55px #0009;backdrop-filter:blur(22px);
+  pointer-events:none;
+}
+.candidate:hover .player-pop,.candidate:focus-within .player-pop,.candidate.show-pop .player-pop {display:block}
+.pop-top {display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;margin-bottom:12px}
+.player-photo {width:76px;height:84px;object-fit:cover;object-position:top;border-radius:8px;background:linear-gradient(135deg,#242b34,#0b0d11);border:1px solid #ffffff18}
+.pop-name {font-weight:900;font-size:14px;line-height:1.3}
+.pop-meta {font-size:10px;color:var(--muted);margin-top:5px;line-height:1.5}
+.stat-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.stat {background:#ffffff08;border:1px solid #ffffff0c;border-radius:7px;padding:7px 5px}
+.stat b {display:block;font-size:13px;letter-spacing:-.3px}
+.stat span {font-size:8px;color:var(--muted);letter-spacing:.7px}
+.stat-note {font-size:9px;color:var(--muted);line-height:1.5;margin:9px 0 0}
+.slot {position:relative}
+.slot.next-slot {border-color:var(--accent);border-style:solid;box-shadow:0 0 0 1px #e9f36a24,0 0 22px #e9f36a0c;animation:slotPulse 1.7s ease-in-out infinite}
+.slot.compatible {border-color:#e9f36a9c;background:linear-gradient(145deg,#242817,#11160f);box-shadow:inset 0 0 0 1px #e9f36a24}
+.slot.bench-open::after {content:"AVAILABLE";position:absolute;right:6px;bottom:6px;font-size:7px;letter-spacing:1px;color:#9ca5b5}
+.slot .slot-pos {letter-spacing:.6px}
+#squadPanel {scroll-margin-top:88px}
+#candidatesPanel {scroll-margin-top:88px}
+.roll-track {display:inline-block;min-width:100%;animation:rollText .18s linear infinite}
+@keyframes rollPulse {from{opacity:.55;transform:translateY(-1px)}to{opacity:1;transform:translateY(1px)}}
+@keyframes rollFlash {0%{transform:scale(.97);filter:blur(2px)}100%{transform:scale(1);filter:blur(0)}}
+@keyframes rollText {from{transform:translateY(-2px)}to{transform:translateY(2px)}}
+@keyframes slotPulse {0%,100%{box-shadow:0 0 0 1px #e9f36a20,0 0 14px #e9f36a08}50%{box-shadow:0 0 0 1px #e9f36a55,0 0 24px #e9f36a18}}
+@media(max-width:900px){.player-pop{left:0;top:calc(100% + 7px);width:100%;max-width:100%}.candidate:hover .player-pop{display:none}.candidate.show-pop .player-pop{display:block}}
+@media(max-width:700px){header{position:relative}.player-pop{position:relative;left:auto;top:auto;width:100%;margin-top:12px}.candidate:hover .player-pop{display:none}.candidate.show-pop .player-pop{display:block}}
+
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="brand-icon">H</div> HARDWOOD DYNASTY</div>
+  <div class="pill">HISTORICAL DRAFT MODE</div>
+</header>
+
+<main>
+  <div class="eyebrow">your franchise starts here</div>
+  <h1>draft your <span>dynasty.</span></h1>
+  <p class="intro">ten picks. ten different players. every pick comes from a randomly selected NBA team and season. build the starting five, then fill your bench.</p>
+
+  <div class="layout">
+    <section class="panel" id="draftPanel">
+      <div class="panel-head"><h2>Draft room</h2><span class="step">01 / 03</span></div>
+      <div class="team-year">
+        <div class="tile">
+          <div class="tile-label">FRANCHISE</div>
+          <div class="tile-value" id="team">—</div>
+          <div class="tile-sub" id="teamSub">awaiting spin</div>
+        </div>
+        <div class="tile">
+          <div class="tile-label">SEASON</div>
+          <div class="tile-value" id="year">—</div>
+          <div class="tile-sub" id="yearSub">awaiting spin</div>
+        </div>
+      </div>
+      <div class="progress-row"><strong id="pickTitle">pick 1 of 10</strong><span id="pickCount">0 / 10</span></div>
+      <div class="progress"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+      <div class="actions">
+        <button class="primary" id="spinTeam" disabled>ROLL FRANCHISE ↗</button>
+        <button class="secondary" id="spinYear" disabled style="display:none">SPIN YEAR</button>
+      </div>
+      <div class="status" id="status">connecting to historical roster database...</div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Your squad</h2><span class="step">02 / 03</span></div>
+      <div class="summary">
+        <div class="summary-box"><div class="summary-label">AVERAGE OVR</div><div class="summary-value" id="average">—</div></div>
+        <div class="summary-box"><div class="summary-label">BEST OVR</div><div class="summary-value" id="best">—</div></div>
+        <div class="summary-box"><div class="summary-label">PLAYERS</div><div class="summary-value" id="total">0/10</div></div>
+      </div>
+      <div class="legend">
+        <span class="ovr99">99 RED</span><span class="ovr90">90–98 YELLOW</span>
+        <span class="ovr80">80–89 PURPLE</span><span class="ovr70">70–79 BLUE</span>
+        <span class="ovr60">60–69 GREEN</span><span class="ovr0">0–59 GREY</span>
+      </div>
+      <div class="status">ratings are estimates, not official historical NBA overalls.</div>
+    </section>
+
+    <section class="panel wide" id="candidatesPanel">
+      <div class="panel-head"><h2>Available players</h2><span class="step">03 / 03</span></div>
+      <div class="status" id="candidateInfo" style="margin:0 0 14px">spin a team and a season to see your candidates.</div>
+      <div class="candidates" id="candidates">
+        <div class="empty-message" style="grid-column:1/-1">your next ten candidates will appear here.</div>
+      </div>
+    </section>
+
+    <section class="panel wide" id="squadPanel">
+      <div class="panel-head"><h2>Starting five</h2><span class="step">SLOTS 01–05</span></div>
+      <div class="position-choice hidden" id="positionChoice"></div>
+      <div class="slots" id="starters"></div>
+      <div class="squad-head"><h3>BENCH</h3><span>SLOTS 06–10</span></div>
+      <div class="bench-grid" id="bench"></div>
+      <div class="actions" style="margin-top:19px">
+        <button class="secondary" id="reset">RESET DRAFT</button>
+      </div>
+    </section>
+  </div>
+  <footer>HARDWOOD DYNASTY · BUILD YOUR ALL-TIME TEAM</footer>
+</main>
+
+<script>
+const DATA_URL =
+"https://raw.githubusercontent.com/mfridson/NBA_Team_Performance/refs/heads/main/historical_rosters.csv";
+
+const teamNames = {
+ ATL:"Atlanta Hawks", BOS:"Boston Celtics", BKN:"Brooklyn Nets",
+ NJN:"New Jersey Nets", BRK:"Brooklyn Nets", CHA:"Charlotte Hornets",
+ CHH:"Charlotte Hornets", CHO:"Charlotte Hornets", CHI:"Chicago Bulls",
+ CLE:"Cleveland Cavaliers", DAL:"Dallas Mavericks", DEN:"Denver Nuggets",
+ DET:"Detroit Pistons", GSW:"Golden State Warriors", PHI:"Philadelphia 76ers",
+ HOU:"Houston Rockets", IND:"Indiana Pacers", LAC:"LA Clippers",
+ BUF:"Buffalo Braves", SDC:"San Diego Clippers", LAL:"Los Angeles Lakers",
+ MEM:"Memphis Grizzlies", VAN:"Vancouver Grizzlies", MIA:"Miami Heat",
+ MIL:"Milwaukee Bucks", MIN:"Minnesota Timberwolves", NYK:"New York Knicks",
+ NOH:"New Orleans Hornets", NOP:"New Orleans Pelicans",
+ NOK:"New Orleans/Oklahoma City Hornets", OKC:"Oklahoma City Thunder",
+ SEA:"Seattle SuperSonics", ORL:"Orlando Magic", PHX:"Phoenix Suns",
+ POR:"Portland Trail Blazers", SAC:"Sacramento Kings", KCK:"Kansas City Kings",
+ KCO:"Kansas City-Omaha Kings", CIN:"Cincinnati Royals", ROC:"Rochester Royals",
+ SFW:"San Francisco Warriors", SYR:"Syracuse Nationals", STL:"St. Louis Hawks",
+ MLH:"Milwaukee Hawks", MNL:"Minneapolis Lakers", UTA:"Utah Jazz",
+ TOR:"Toronto Raptors", WAS:"Washington Wizards", WSB:"Washington Bullets",
+ BAL:"Baltimore Bullets", CAP:"Capital Bullets", PHW:"Philadelphia Warriors"
+};
+
+const stars = {
+ "michael jordan":99,"lebron james":99,"kareem abdul-jabbar":99,
+ "wilt chamberlain":99,"bill russell":98,"magic johnson":98,
+ "larry bird":98,"shaquille o'neal":98,"kobe bryant":98,
+ "stephen curry":98,"nikola jokic":98,"hakeem olajuwon":97,
+ "tim duncan":97,"kevin durant":97,"giannis antetokounmpo":97,
+ "luka doncic":97,"oscar robertson":97,"julius erving":97,
+ "kevin garnett":97,"charles barkley":96,"karl malone":96,
+ "david robinson":96,"dirk nowitzki":96,"allen iverson":96,
+ "dwyane wade":96,"james harden":96,"kawhi leonard":96,
+ "tracy mcgrady":96,"john stockton":96,"isiah thomas":96,
+ "scottie pippen":95,"gary payton":95,"steve nash":95,
+ "clyde drexler":95,"dominique wilkins":95,"chris paul":95,
+ "russell westbrook":95,"patrick ewing":95,"dwight howard":95,
+ "reggie miller":94,"ray allen":94,"vince carter":94,
+ "shawn kemp":94,"penny hardaway":94,"dennis rodman":93,
+ "yao ming":93,"spud webb":88
+};
+
+let db=[];
+let franchises=[];
+let selectedTeam=null;
+let selectedYear=null;
+let candidates=[];
+let roster=[];
+let usedPlayers=new Set();
+let seenSeasons=new Set();
+let chosenCandidate=null;
+let rolling=false;
+
+const $=id=>document.getElementById(id);
+const randomItem=arr=>arr[Math.floor(Math.random()*arr.length)];
+
+function parseCSV(text) {
+  const rows=[];
+  let row=[],cell="",quoted=false;
+  for(let i=0;i<text.length;i++) {
+    const c=text[i];
+    if(c==='"'&&quoted&&text[i+1]==='"') { cell+='"';i++; }
+    else if(c==='"') quoted=!quoted;
+    else if(c===','&&!quoted) { row.push(cell);cell=""; }
+    else if((c==='\n'||c==='\r')&&!quoted) {
+      if(c==='\r'&&text[i+1]==='\n') i++;
+      row.push(cell);cell="";
+      if(row.some(v=>v.trim())) rows.push(row);
+      row=[];
+    } else cell+=c;
+  }
+  if(cell||row.length) { row.push(cell);rows.push(row); }
+  const headers=rows.shift().map(h=>h.trim());
+  return rows.map(values=>Object.fromEntries(
+    headers.map((h,i)=>[h,(values[i]||"").trim()])
+  ));
+}
+
+function escapeHTML(s) {
+  return String(s??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+}
+
+function getRating(p) {
+  const key=(p.Player||"").trim().toLowerCase();
+  if(stars[key]!==undefined) return stars[key];
+  const expText=String(p.Exp||"0").toUpperCase();
+  const exp=expText==="R"?0:(Number(expText)||0);
+  let score=60+Math.min(exp,10)*1.7;
+  if(expText==="R") score=63;
+  if(exp>=15) score+=2;
+  return Math.max(60,Math.min(84,Math.round(score)));
+}
+
+function ratingClass(n) {
+  if(n===99) return "ovr99";
+  if(n>=90) return "ovr90";
+  if(n>=80) return "ovr80";
+  if(n>=70) return "ovr70";
+  if(n>=60) return "ovr60";
+  return "ovr0";
+}
+
+function teamLabel(code) { return teamNames[code]||code; }
+
+// Only positions listed in the historical roster are enabled, with a curated set of known career roles.
+const CAREER_POSITIONS = {
+  "magic johnson":["PG","SG","SF"],"lebron james":["SF","PF","PG"],"luka doncic":["PG","SG"],
+  "scottie pippen":["SF","PF"],"dennis rodman":["PF","SF"],"kevin durant":["SF","PF"],
+  "giannis antetokounmpo":["PF","SF","C"],"draymond green":["PF","C"],"lamelo ball":["PG","SG"],
+  "penny hardaway":["PG","SG"],"anfernee hardaway":["PG","SG"],"grant hill":["SF","PF","SG"],
+  "julius erving":["SF","PF"],"charles barkley":["PF","SF"],"larry bird":["SF","PF"],
+  "kobe bryant":["SG","SF"],"michael jordan":["SG","SF"],"dwyane wade":["SG","PG"],
+  "james harden":["SG","PG"],"russell westbrook":["PG","SG"],"stephen curry":["PG","SG"],
+  "shawn kemp":["PF","C"],"kevin garnett":["PF","C"],"tim duncan":["PF","C"],
+  "dirk nowitzki":["PF","C"],"karl malone":["PF"],"hakeem olajuwon":["C","PF"],
+  "david robinson":["C","PF"],"shaquille o'neal":["C"],"kareem abdul-jabbar":["C"],
+  "wilt chamberlain":["C"],"bill russell":["C"],"nikola jokic":["C","PF"],
+  "joel embiid":["C"],"jayson tatum":["SF","PF"],"jimmy butler":["SF","SG"],
+  "kawhi leonard":["SF","SG"],"tracy mcgrady":["SG","SF"],"clyde drexler":["SG","SF"],
+  "gary payton":["PG"],"john stockton":["PG"],"chris paul":["PG"],"allen iverson":["PG","SG"],
+  "oscar robertson":["PG","SG"],"isiah thomas":["PG"],"reggie miller":["SG"],
+  "dominique wilkins":["SF","PF"],"jerry west":["SG","PG"],"elgin baylor":["SF","PF"],
+  "jason kidd":["PG"],"vince carter":["SG","SF"]
+};
+function normalizePositions(raw, playerName="") {
+  const name=String(playerName||"").trim().toLowerCase();
+  if(CAREER_POSITIONS[name]) return CAREER_POSITIONS[name].slice();
+  const s=String(raw||"").toUpperCase().replace(/[^A-Z]/g,"");
+  const result=new Set();
+  for(const p of ["PG","SG","SF","PF","C"]) if(s.includes(p)) result.add(p);
+  if(s==="G"||s==="GUARD"){result.add("PG");result.add("SG");}
+  if(s==="F"||s==="FORWARD"){result.add("SF");result.add("PF");}
+  if(s==="FC"||s==="CF"){result.add("PF");result.add("C");}
+  if(s==="GF"||s==="FG"){result.add("SG");result.add("SF");}
+  return ["PG","SG","SF","PF","C"].filter(p=>result.has(p));
+}
+const STATS_URL = "https://raw.githubusercontent.com/nathankyryk/nba/main/all_player_stats_1995-2025.csv";
+const WIKI_API = "https://en.wikipedia.org/w/api.php";
+let statsDB = [];
+const photoCache = new Map();
+const statsCache = new Map();
+function findSeasonStats(player, year) {
+  const key=(player.Player||"").trim().toLowerCase()+"|"+year;
+  if(statsCache.has(key)) return statsCache.get(key);
+  if(!statsDB.length) return null;
+  const rows=statsDB.filter(r=>{
+    const end=Number((String(r.SEASON||"").match(/(\d{4})\s*$/)||[])[1]);
+    return end===Number(year) && String(r.PLAYER_NAME||"").trim().toLowerCase()===String(player.Player||"").trim().toLowerCase();
+  });
+  const row=rows.find(r=>String(r.TEAM_ABBREVIATION||"")===String(player.Team||""))||rows[0]||null;
+  const found=row?{...row,PTS:(Number(row.FGM)||0)*2+(Number(row.FG3M)||0)+(Number(row.FTM)||0)}:null;
+  statsCache.set(key,found);
+  return found;
+}
+async function getPlayerPhoto(name) {
+  if(photoCache.has(name)) return photoCache.get(name);
+  const promise=(async()=>{
+    try {
+      const url=`${WIKI_API}?action=query&format=json&origin=*&redirects=1&prop=pageimages&piprop=thumbnail&pithumbsize=360&titles=${encodeURIComponent(name)}`;
+      const r=await fetch(url); if(!r.ok) return "";
+      const j=await r.json(); const page=Object.values(j.query?.pages||{})[0];
+      return page?.thumbnail?.source||"";
+    } catch(e) { return ""; }
+  })();
+  photoCache.set(name,promise); return promise;
+}
+function statCell(value,label,percent=false) {
+  const shown=value===undefined||value===null||value===""?"—":percent?(Number(value)*100).toFixed(1)+"%":Number(value).toFixed(1);
+  return `<div class="stat"><b>${shown}</b><span>${label}</span></div>`;
+}
+function statPanelHTML(p) {
+  const st=findSeasonStats(p,selectedYear);
+  if(!st) return `<div class="stat-grid"><div class="stat"><b>—</b><span>PPG</span></div><div class="stat"><b>—</b><span>RPG</span></div><div class="stat"><b>—</b><span>APG</span></div><div class="stat"><b>—</b><span>MPG</span></div></div><p class="stat-note">season stats match when available from 1996–97 onward. unavailable values are not invented.</p>`;
+  return `<div class="stat-grid">${statCell(st.PTS,"PPG")}${statCell(st.REB,"RPG")}${statCell(st.AST,"APG")}${statCell(st.MIN,"MPG")}${statCell(st.STL,"SPG")}${statCell(st.BLK,"BPG")}${statCell(st.FG_PCT,"FG%",true)}${statCell(st.FG3_PCT,"3P%",true)}</div><p class="stat-note">regular-season per-game stats · ${escapeHTML(st.SEASON)}.</p>`;
+}
+
+async function loadDB() {
+  try {
+    const res=await fetch(DATA_URL);
+    if(!res.ok) throw Error("dataset unavailable");
+    const text=await res.text();
+    db=parseCSV(text).filter(p=>p.Player&&p.Team&&Number(p.Season));
+    franchises=[...new Set(db.map(p=>p.Team))];
+    try { const sr=await fetch(STATS_URL); if(sr.ok) statsDB=parseCSV(await sr.text()); } catch(_) {}
+    $("status").textContent=
+      `database loaded · ${db.length.toLocaleString()} player-season records`;
+    $("status").classList.add("good");
+    $("spinTeam").disabled=false;
+  } catch(e) {
+    $("status").textContent=
+      "couldn't load the roster database. check your connection and refresh.";
+  }
+}
+
+async function spinTeam() {
+  if(!db.length||roster.length>=10||rolling) return;
+  rolling=true; selectedYear=null; candidates=[]; chosenCandidate=null;
+  $("spinTeam").disabled=true;$("spinYear").disabled=true;
+  $("status").classList.remove("good");
+  const possible=franchises.filter(t=>db.some(p=>p.Team===t));
+  const pool=possible.filter(t=>t!==selectedTeam);
+  const finalTeam=randomItem(pool.length?pool:possible);
+  $("team").classList.add("rolling");$("year").classList.add("rolling");
+  const ticker=setInterval(()=>{$("team").textContent=teamLabel(randomItem(possible));},75);
+  await new Promise(resolve=>setTimeout(resolve,1250)); clearInterval(ticker);
+  selectedTeam=finalTeam;
+  $("team").textContent=teamLabel(finalTeam);$("teamSub").textContent="franchise locked · "+finalTeam;
+  $("team").classList.remove("rolling");$("team").classList.add("roll-value");
+  $("year").textContent="ROLLING…";$("yearSub").textContent="season selector active";
+  await new Promise(resolve=>setTimeout(resolve,250));
+  $("team").classList.remove("roll-value");rolling=false;
+  spinYear();
+}
+async function spinYear() {
+  if(!selectedTeam||roster.length>=10||rolling) return;
+  rolling=true;
+  const years=[...new Set(db.filter(p=>p.Team===selectedTeam).map(p=>Number(p.Season)))].sort((a,b)=>a-b);
+  let available=years.filter(y=>!seenSeasons.has(selectedTeam+"-"+y));
+  if(!available.length) available=years;
+  const finalYear=randomItem(available);
+  $("year").classList.add("rolling");
+  const ticker=setInterval(()=>{$("year").textContent=String(randomItem(years));},65);
+  await new Promise(resolve=>setTimeout(resolve,1050));clearInterval(ticker);
+  selectedYear=finalYear;seenSeasons.add(selectedTeam+"-"+selectedYear);
+  const full=db.filter(p=>p.Team===selectedTeam&&Number(p.Season)===selectedYear)
+    .map(p=>({...p,ovr:getRating(p),eligible:normalizePositions(p.Pos,p.Player)}))
+    .filter(p=>!usedPlayers.has(p.Player.toLowerCase()));
+  const unique=new Map();
+  for(const p of full){const key=p.Player.toLowerCase();if(!unique.has(key)||p.ovr>unique.get(key).ovr)unique.set(key,p);}
+  candidates=[...unique.values()].sort((a,b)=>b.ovr-a.ovr).slice(0,10);
+  $("year").textContent=String(selectedYear);$("yearSub").textContent=`${full.length} unused roster entries`;
+  $("year").classList.remove("rolling");$("year").classList.add("roll-value");
+  $("candidateInfo").textContent="choose one of the ten candidates. hover or tap a player for their season stats and photo.";
+  $("status").textContent="season locked. pick one player below.";
+  renderCandidates();rolling=false;
+  $("candidatesPanel").scrollIntoView({behavior:"smooth",block:"start"});
+  setTimeout(()=>$("year").classList.remove("roll-value"),500);
+}
+function renderCandidates() {
+  const wrap=$("candidates");wrap.innerHTML="";
+  if(!candidates.length) {
+    wrap.innerHTML='<div class="empty-message" style="grid-column:1/-1">no unused players found for this season. roll another franchise.</div>';
+    $("spinTeam").disabled=false;return;
+  }
+  candidates.forEach((p,i)=>{
+    const card=document.createElement("div");card.className="candidate";card.tabIndex=0;card.style.animationDelay=(i*35)+"ms";
+    const name=escapeHTML(p.Player),position=escapeHTML(p.Pos||"—"),jersey=escapeHTML(p["No."]||"?");
+    card.innerHTML=`<div class="candidate-top"><div style="min-width:0"><div class="player-name">${name}</div><div class="player-info">${position} · #${jersey}<br>${escapeHTML(teamLabel(p.Team))} · ${p.Season}</div></div><span class="rating ${ratingClass(p.ovr)}">${p.ovr}</span></div><div class="position-picker hidden"></div><div class="pos-hint">select player → choose eligible position</div><div class="player-pop"><div class="pop-top"><img class="player-photo" alt="${name}" src="" loading="lazy"><div><div class="pop-name">${name}</div><div class="pop-meta">${position} · ${escapeHTML(teamLabel(p.Team))}<br>${p.Season} season · ${p.ovr} OVR</div></div></div>${statPanelHTML(p)}</div>`;
+    const photo=card.querySelector(".player-photo");
+    getPlayerPhoto(p.Player).then(src=>{if(src)photo.src=src;else photo.style.display="none";});
+    const picker=card.querySelector(".position-picker"),hint=card.querySelector(".pos-hint");
+    const selectPlayer=()=>{
+      if(roster.length>=10||usedPlayers.has(p.Player.toLowerCase()))return;
+      const wasOpen=card.classList.contains("chosen");
+      document.querySelectorAll(".position-picker").forEach(el=>{el.classList.add("hidden");el.innerHTML="";});
+      document.querySelectorAll(".pos-hint").forEach(el=>el.textContent="select player → choose eligible position");
+      document.querySelectorAll(".candidate").forEach(el=>el.classList.remove("chosen","show-pop"));
+      if(wasOpen){renderSquad();return;}
+      card.classList.add("chosen","show-pop");
+      hint.textContent="choose a position this player actually played";
+      if(!p.eligible.length){hint.textContent="position data missing for this player.";return;}
+      const choice=$("positionChoice");
+      choice.classList.remove("hidden");
+      choice.innerHTML=`<div class="position-choice-title">ASSIGN ${escapeHTML(p.Player.toUpperCase())} · ONLY ELIGIBLE POSITIONS</div><div class="position-choice-buttons"></div>`;
+      const buttons=choice.querySelector(".position-choice-buttons");
+      p.eligible.forEach(pos=>{
+        const b=document.createElement("button");b.className="pos-btn";b.textContent=pos;
+        b.addEventListener("click",ev=>{ev.stopPropagation();draft(p,pos);});buttons.appendChild(b);
+      });
+      renderSquad(p.eligible);
+      $("squadPanel").scrollIntoView({behavior:"smooth",block:"start"});
+    };
+    card.addEventListener("click",selectPlayer);
+    card.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();selectPlayer();}});
+    wrap.appendChild(card);
+  });
+}
+function draft(p,pos) {
+  const key=p.Player.toLowerCase();if(usedPlayers.has(key)||roster.length>=10)return;
+  usedPlayers.add(key);roster.push({...p,assignedPos:pos,sourceTeam:selectedTeam,sourceYear:selectedYear});
+  $("status").textContent=`drafted ${p.Player} · ${pos} · ${p.ovr} OVR`;$("status").classList.add("good");
+  $("candidateInfo").textContent="pick confirmed. roll your next franchise for a new set of candidates.";
+  candidates=[];$("candidates").innerHTML='<div class="empty-message" style="grid-column:1/-1">pick locked in. ready for the next roll.</div>';
+  $("positionChoice").classList.add("hidden");$("positionChoice").innerHTML="";
+  $("spinTeam").disabled=roster.length>=10;$("spinYear").disabled=true;
+  $("spinTeam").textContent=roster.length>=10?"DRAFT COMPLETE":"ROLL NEXT FRANCHISE ↗";
+  renderSquad();updateProgress();$("squadPanel").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function slotHTML(p,i,bench,eligible=[]) {
+  const label=bench?`BENCH ${i+1}`:`STARTER ${i+1}`;
+  if(!p){
+    const role=["PG","SG","SF","PF","C"][i%5];
+    const compatible=eligible.includes(role),benchReady=bench&&eligible.length>0;
+    const next=(!bench&&roster.length<5&&i===roster.length)||(bench&&roster.length>=5&&i===roster.length-5);
+    return `<div class="slot ${next?"next-slot":""} ${compatible?"compatible":""} ${benchReady?"bench-open":""}"><div class="slot-pos">${label}</div><div class="slot-name" style="color:#687181">empty slot</div><div class="slot-sub">${compatible?role+" role available":benchReady?"bench spot available":"waiting for draft"}</div></div>`;
+  }
+  return `<div class="slot filled"><div class="slot-pos">${escapeHTML(p.assignedPos)} · ${label}</div><div class="slot-name">${escapeHTML(p.Player)}</div><div class="slot-sub">${escapeHTML(teamLabel(p.sourceTeam))}<br>${p.sourceYear}</div><div class="slot-rating ${ratingClass(p.ovr)}">${p.ovr} OVR</div></div>`;
+}
+function renderSquad(eligible=[]) {
+  $("starters").innerHTML=Array.from({length:5},(_,i)=>slotHTML(roster[i],i,false,eligible)).join("");
+  $("bench").innerHTML=Array.from({length:5},(_,i)=>slotHTML(roster[i+5],i,true,eligible)).join("");
+  $("total").textContent=roster.length+"/10";
+  if(roster.length){$("average").textContent=(roster.reduce((a,p)=>a+p.ovr,0)/roster.length).toFixed(1);$("best").textContent=Math.max(...roster.map(p=>p.ovr));}
+  else{$("average").textContent="—";$("best").textContent="—";}
+}
+function updateProgress() {
+  $("pickCount").textContent=roster.length+" / 10 drafted";
+  $("progress").style.width=(roster.length*10)+"%";
+  $("pickTitle").textContent=roster.length===10
+    ?"draft complete!" : "pick "+(roster.length+1)+" of 10";
+  if(roster.length===10) {
+    $("candidateInfo").textContent="your ten-player dynasty is complete.";
+    $("status").textContent="draft complete. you have ten unique players.";
+    $("status").classList.add("good");
+  }
+}
+
+function resetDraft() {
+  rolling=false;
+  if($("positionChoice")){$("positionChoice").classList.add("hidden");$("positionChoice").innerHTML="";}
+  selectedTeam=null;
+  selectedYear=null;
+  candidates=[];
+  roster=[];
+  usedPlayers.clear();
+  seenSeasons.clear();
+  $("team").textContent="—";
+  $("teamSub").textContent="awaiting spin";
+  $("year").textContent="—";
+  $("yearSub").textContent="awaiting spin";
+  $("spinTeam").textContent="ROLL FRANCHISE ↗";
+  $("spinTeam").disabled=!db.length;
+  $("spinYear").disabled=true;
+  $("candidates").innerHTML='<div class="empty-message" style="grid-column:1/-1">your next ten candidates will appear here.</div>';
+  $("candidateInfo").textContent="spin a team and a season to see your candidates.";
+  $("status").textContent="draft reset. build a new dynasty.";
+  $("status").classList.remove("good");
+  renderSquad();
+  updateProgress();
+}
+
+$("spinTeam").addEventListener("click",spinTeam);
+$("spinYear").addEventListener("click",spinYear);
+$("reset").addEventListener("click",resetDraft);
+
+renderSquad();
+updateProgress();
+loadDB();
+</script>
+</body>
+</html>
